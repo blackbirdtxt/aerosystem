@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width,initial-scale=1'>
+    <title>Tracking Equipaje</title>
+    <link href="https://fonts.googleapis.com/css2?
+    family=Rajdhani:wght@400;700&family=Inter:wght@300;500&display=swap"
+    rel='stylesheet'>
+    <link rel='stylesheet' href='/css/main.css'>
+    <link rel='stylesheet' href='/css/components.css'>
+    <style>
+        body { background: #0a0e1a; color: #fff; font-family: Inter; padding: 50px; }
+        .box { max-width: 900px; margin: auto; background: #111827; padding: 40px; border-radius: 25px; }
+        input { width: 70%; padding: 15px; background: #0d1526; border: 1px solid #334155; color: #fff; border-radius: 12px; }
+        button { padding: 15px 25px; background: #2563eb; color: #fff; border: 0; border-radius: 12px; cursor: pointer; }
+        .step { margin: 20px 0; padding-left: 20px; border-left: 4px solid #2563eb; }
+    </style>
+</head>
+<body>
+    <div class='box'>
+        <h1>Tracking Equipaje</h1>
+        <input id='code' placeholder='AEROSYS-GARC-1234'>
+        <button onclick='track()'>Buscar</button>
+        <div id='result'></div>
+    </div>
+
+    <script>
+        async function track() {
+            let r = await fetch('/aerosystem/api/equipaje.php?action=tracking&codigo=' + code.value);
+            await r.json();
+            
+            result.innerHTML = `
+                <div class='step'>Registrado</div>
+                <div class='step'>En seguridad</div>
+                <div class='step'>En vuelo</div>
+                <div class='step'>En cinta</div>
+            `;
+        }
+    </script>
+    <script src='/js/api.js'></script>
+    <script src='/js/auth.js'></script>
+</body>
+</html>

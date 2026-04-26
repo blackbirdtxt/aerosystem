@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>AeroSystem Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/aerosystem/css/main.css">
+    <link rel="stylesheet" href="/aerosystem/css/components.css">
+    <style>
+        :root {
+            --bg-dark: #0a0e1a; --bg-card: #111827; --bg-surface: #1a2235;
+            --bg-input: #0d1526; --accent: #2563eb; --accent-hover: #3b82f6;
+            --gold: #f59e0b; --success: #10b981; --danger: #ef4444;
+            --warning: #f97316; --text: #f1f5f9; --text-muted: #94a3b8;
+            --border: rgba(30,58,95,0.6); --radius: 12px;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { background: var(--bg-dark); color: var(--text); font-family: 'Inter', sans-serif; }
+
+        /* ── HEADER ── */
+        header {
+            padding: 18px 6%; display: flex; justify-content: space-between;
+            align-items: center; background: rgba(17,24,39,0.9);
+            backdrop-filter: blur(14px); position: sticky; top: 0; z-index: 1000;
+            border-bottom: 1px solid var(--border);
+        }
+        .logo { font-family: 'Rajdhani', sans-serif; font-size: 28px; font-weight: 700; letter-spacing: 2px; }
+        .logo span { color: var(--accent); }
+        nav a { color: var(--text-muted); text-decoration: none; margin-left: 24px; font-size: 14px; transition: color .2s; }
+        nav a:hover { color: var(--text); }
+
+        /* ── HERO ── */
+        .hero { padding: 80px 6% 60px; }
+        .hero h1 { font-family: 'Rajdhani', sans-serif; font-size: 64px; font-weight: 700; line-height: 1.1; margin-bottom: 12px; }
+        .hero p { color: var(--text-muted); font-size: 18px; margin-bottom: 36px; }
+
+        /* ── TIPO TOGGLE ── */
+        .tipo-tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .tipo-tab {
+            padding: 10px 20px; border-radius: 30px; border: 1px solid var(--border);
+            background: var(--bg-card); color: var(--text-muted); cursor: pointer;
+            font-size: 14px; font-family: 'Inter', sans-serif; transition: all .2s;
+        }
+        .tipo-tab.active { background: var(--accent); color: white; border-color: var(--accent); }
+        .tipo-tab:hover:not(.active) { border-color: var(--accent); color: var(--text); }
+
+        /* ── SEARCH BOX ── */
+        .search-box {
+            background: rgba(17,24,39,0.8); backdrop-filter: blur(10px);
+            border: 1px solid var(--border); border-radius: 20px; padding: 28px;
+            display: grid; grid-template-columns: 1fr 1fr 1fr 1fr auto;
+            gap: 16px; align-items: end;
+        }
+        @media(max-width: 900px) {
+            .search-box { grid-template-columns: 1fr 1fr; }
+            .search-box button { grid-column: span 2; }
+            .hero h1 { font-size: 40px; }
+        }
+        .field-group { display: flex; flex-direction: column; gap: 6px; }
+        .field-group label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; }
+        .field-group select, .field-group input {
+            background: var(--bg-input); border: 1px solid var(--border);
+            color: var(--text); padding: 14px 16px; border-radius: var(--radius);
+            font-size: 15px; font-family: 'Inter', sans-serif;
+            appearance: none; -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 14px center;
+            cursor: pointer; transition: border-color .2s;
+        }
+        .field-group select:focus, .field-group input:focus {
+            outline: none; border-color: var(--accent);
+        }
+        .field-group input { background-image: none; }
+        .field-group select option { background: #1a2235; }
+
+        /* select deshabilitado mientras carga */
+        .field-group select:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .btn-buscar {
+            background: var(--accent); color: white; border: none;
+            padding: 14px 28px; border-radius: var(--radius); font-size: 15px;
+            font-weight: 600; cursor: pointer; white-space: nowrap;
+            transition: background .2s, transform .1s; font-family: 'Inter', sans-serif;
+            height: 50px;
+        }
+        .btn-buscar:hover { background: var(--accent-hover); }
+        .btn-buscar:active { transform: scale(0.98); }
+
+        /* Badge tipo vuelo en el select de origen/destino */
+        .badge-tipo {
+            display: inline-block; font-size: 11px; padding: 2px 8px;
+            border-radius: 10px; margin-left: 8px; vertical-align: middle;
+        }
+        .badge-nac  { background: rgba(16,185,129,.15); color: #10b981; }
+        .badge-int  { background: rgba(37,99,235,.15);  color: #60a5fa; }
+
+        /* ── AEROLÍNEAS ── */
+        .section { padding: 60px 6%; }
+        .section h2 { font-family: 'Rajdhani', sans-serif; font-size: 28px; margin-bottom: 24px; }
+        .airlines-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; }
+        .air-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 16px; padding: 28px 20px; text-align: center;
+            font-family: 'Rajdhani', sans-serif; font-size: 20px; font-weight: 600;
+            transition: border-color .2s, transform .2s;
+        }
+        .air-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+        .air-card .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--success); display: inline-block; margin-right: 6px; }
+
+        /* ── PANEL ── */
+        .panel-table {
+            width: 100%; border-collapse: collapse;
+            background: var(--bg-card); border-radius: 16px; overflow: hidden;
+            border: 1px solid var(--border);
+        }
+        .panel-table th {
+            padding: 16px 20px; text-align: left; font-size: 12px;
+            text-transform: uppercase; letter-spacing: 1px; color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+        }
+        .panel-table td { padding: 16px 20px; border-bottom: 1px solid rgba(30,58,95,0.3); font-size: 14px; }
+        .panel-table tr:last-child td { border-bottom: none; }
+        .panel-table tr:hover td { background: rgba(37,99,235,0.05); }
+
+        .estado-badge {
+            padding: 5px 12px; border-radius: 20px; font-size: 12px;
+            font-weight: 500; display: inline-block;
+        }
+        .estado-Programado   { background: rgba(148,163,184,.15); color: #94a3b8; }
+        .estado-Retrasado    { background: rgba(249,115,22,.15);  color: #f97316; }
+        .estado-Abordando    { background: rgba(245,158,11,.15);  color: #f59e0b; }
+        .estado-En-vuelo     { background: rgba(59,130,246,.15);  color: #3b82f6; }
+        .estado-Aterrizado   { background: rgba(16,185,129,.15);  color: #10b981; }
+        .estado-Desembarcando{ background: rgba(6,182,212,.15);   color: #06b6d4; }
+        .estado-Cancelado    { background: rgba(239,68,68,.15);   color: #ef4444; }
+
+        .panel-empty { text-align: center; color: var(--text-muted); padding: 48px; }
+        .panel-loading { text-align: center; color: var(--text-muted); padding: 32px; font-size: 14px; }
+
+        footer { padding: 40px 6%; text-align: center; color: var(--text-muted); font-size: 14px; border-top: 1px solid var(--border); }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo">AERO<span>SYSTEM</span></div>
+    <nav>
+        <a href="/aerosystem/index.html">Inicio</a>
+        <a href="/aerosystem/mi-cuenta.html">Mis Viajes</a>
+        <a href="/aerosystem/tracking.html">Tracking</a>
+        <a href="/aerosystem/panel-aeropuerto.html">Panel</a>
+        <a href="/aerosystem/login.html">Login</a>
+    </nav>
+</header>
+
+<section class="hero">
+    <h1>Reserva tu<br>próximo vuelo</h1>
+    <p>Experiencia premium para vuelos nacionales e internacionales.</p>
+
+    <!-- TABS TIPO VUELO -->
+    <div class="tipo-tabs">
+        <button class="tipo-tab active" data-tipo="todos"          onclick="setTipo(this)">✈ Todos</button>
+        <button class="tipo-tab"        data-tipo="Nacional"       onclick="setTipo(this)">🇵🇪 Nacional</button>
+        <button class="tipo-tab"        data-tipo="Internacional"  onclick="setTipo(this)">🌍 Internacional</button>
+    </div>
+
+    <div class="search-box">
+        <div class="field-group">
+            <label>Origen</label>
+            <select id="origen">
+                <option value="">Cargando...</option>
+            </select>
+        </div>
+        <div class="field-group">
+            <label>Destino</label>
+            <select id="destino">
+                <option value="">Primero elige origen</option>
+            </select>
+        </div>
+        <div class="field-group">
+            <label>Fecha de ida</label>
+            <input type="date" id="fecha">
+        </div>
+        <div class="field-group">
+            <label>Pasajeros</label>
+            <select id="pasajeros">
+                <option value="1">1 pasajero</option>
+                <option value="2">2 pasajeros</option>
+                <option value="3">3 pasajeros</option>
+                <option value="4">4 pasajeros</option>
+                <option value="5">5 pasajeros</option>
+            </select>
+        </div>
+        <button class="btn-buscar" onclick="buscar()">BUSCAR</button>
+    </div>
+</section>
+
+<!-- AEROLÍNEAS -->
+<section class="section">
+    <h2>Aerolíneas Disponibles</h2>
+    <div class="airlines-grid">
+        <div class="air-card"><span class="dot"></span>LATAM</div>
+        <div class="air-card"><span class="dot"></span>Avianca</div>
+        <div class="air-card"><span class="dot"></span>Sky Airline</div>
+        <div class="air-card"><span class="dot"></span>Copa Airlines</div>
+    </div>
+</section>
+
+<!-- PANEL AEROPUERTO -->
+<section class="section">
+    <h2>Panel Aeropuerto — Próximas salidas</h2>
+    <table class="panel-table">
+        <thead>
+            <tr>
+                <th>Vuelo</th>
+                <th>Origen</th>
+                <th>Destino</th>
+                <th>Hora salida</th>
+                <th>Estado</th>
+                <th>Puerta</th>
+            </tr>
+        </thead>
+        <tbody id="boardBody">
+            <tr><td colspan="6" class="panel-loading">Cargando vuelos...</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<footer>AeroSystem Pro · Jorge Chávez Smart Passenger Terminal</footer>
+
+<script>
+// ── ESTADO GLOBAL ────────────────────────────────────────
+let todosAeropuertos = [];   // [{codigo_iata, nombre, ciudad, idpais, es_internacional}]
+let tipoActivo = 'todos';    // 'todos' | 'Nacional' | 'Internacional'
+
+// ── INICIALIZACIÓN ───────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+    // Fecha mínima = hoy
+    const hoy = new Date().toISOString().split('T')[0];
+    document.getElementById('fecha').value = hoy;
+    document.getElementById('fecha').min = hoy;
+
+    cargarAeropuertos();
+    loadPanel();
+    setInterval(loadPanel, 30000);
+});
+
+// ── CARGAR AEROPUERTOS DESDE LA API ──────────────────────
+async function cargarAeropuertos() {
+    try {
+        const r = await fetch('/aerosystem/api/aeropuertos.php?action=listar');
+        const j = await r.json();
+        if (j.success && j.data) {
+            todosAeropuertos = j.data;
+            actualizarDropdowns();
+        }
+    } catch (e) {
+        // Fallback con datos locales si la API no responde
+        todosAeropuertos = [
+            {codigo_iata:'LIM', ciudad:'Lima',            idpais:'PE', es_internacional:1},
+            {codigo_iata:'CUZ', ciudad:'Cusco',           idpais:'PE', es_internacional:0},
+            {codigo_iata:'AQP', ciudad:'Arequipa',        idpais:'PE', es_internacional:0},
+            {codigo_iata:'TRU', ciudad:'Trujillo',        idpais:'PE', es_internacional:0},
+            {codigo_iata:'BOG', ciudad:'Bogotá',          idpais:'CO', es_internacional:1},
+            {codigo_iata:'SCL', ciudad:'Santiago',        idpais:'CL', es_internacional:1},
+            {codigo_iata:'EZE', ciudad:'Buenos Aires',    idpais:'AR', es_internacional:1},
+            {codigo_iata:'MDE', ciudad:'Medellín',        idpais:'CO', es_internacional:1},
+            {codigo_iata:'UIO', ciudad:'Quito',           idpais:'EC', es_internacional:1},
+            {codigo_iata:'MEX', ciudad:'Ciudad de México',idpais:'MX', es_internacional:1},
+        ];
+        actualizarDropdowns();
+    }
+}
+
+// ── CAMBIAR TIPO DE VUELO ────────────────────────────────
+function setTipo(btn) {
+    document.querySelectorAll('.tipo-tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    tipoActivo = btn.dataset.tipo;
+    actualizarDropdowns();
+}
+
+// ── FILTRAR Y LLENAR DROPDOWNS ────────────────────────────
+function filtrarPorTipo(aeropuertos) {
+    if (tipoActivo === 'Nacional') {
+        // Solo aeropuertos de Perú
+        return aeropuertos.filter(a => a.idpais === 'PE');
+    }
+    if (tipoActivo === 'Internacional') {
+        // Todos menos los nacionales puros (o sea, aeropuertos internacionales)
+        return aeropuertos.filter(a => a.es_internacional == 1);
+    }
+    // 'todos' → todos
+    return aeropuertos;
+}
+
+function actualizarDropdowns() {
+    const filtrados = filtrarPorTipo(todosAeropuertos);
+    const origenSel  = document.getElementById('origen');
+    const destinoSel = document.getElementById('destino');
+
+    // Guardar valor anterior si existe
+    const anteriorOrigen  = origenSel.value;
+
+    // Llenar origen
+    origenSel.innerHTML = '<option value="">-- Elige origen --</option>';
+    filtrados.forEach(a => {
+        const opt = document.createElement('option');
+        opt.value = a.codigo_iata;
+        opt.textContent = `${a.codigo_iata} — ${a.ciudad || a.nombre}`;
+        origenSel.appendChild(opt);
+    });
+
+    // Restaurar valor anterior si sigue siendo válido
+    if (anteriorOrigen && filtrados.find(a => a.codigo_iata === anteriorOrigen)) {
+        origenSel.value = anteriorOrigen;
+    }
+
+    // Actualizar destino según el origen actual
+    actualizarDestinos();
+}
+
+function actualizarDestinos() {
+    const origenVal  = document.getElementById('origen').value;
+    const destinoSel = document.getElementById('destino');
+    const anteriorDestino = destinoSel.value;
+
+    destinoSel.innerHTML = '<option value="">-- Elige destino --</option>';
+
+    if (!origenVal) return;
+
+    // Destinos = misma lista filtrada EXCEPTO el origen elegido
+    const filtrados = filtrarPorTipo(todosAeropuertos);
+    filtrados
+        .filter(a => a.codigo_iata !== origenVal)
+        .forEach(a => {
+            const opt = document.createElement('option');
+            opt.value = a.codigo_iata;
+            opt.textContent = `${a.codigo_iata} — ${a.ciudad || a.nombre}`;
+            destinoSel.appendChild(opt);
+        });
+
+    // Restaurar valor anterior si sigue siendo válido
+    if (anteriorDestino && anteriorDestino !== origenVal) {
+        destinoSel.value = anteriorDestino;
+    }
+}
+
+// Escuchar cambio de origen para actualizar destinos
+document.getElementById('origen').addEventListener('change', actualizarDestinos);
+
+// ── BUSCAR VUELOS ─────────────────────────────────────────
+function buscar() {
+    const origen   = document.getElementById('origen').value;
+    const destino  = document.getElementById('destino').value;
+    const fecha    = document.getElementById('fecha').value;
+    const pasajeros = document.getElementById('pasajeros').value;
+
+    if (!origen)   return alert('Por favor elige un origen.');
+    if (!destino)  return alert('Por favor elige un destino.');
+    if (!fecha)    return alert('Por favor elige una fecha.');
+    if (origen === destino) return alert('El origen y destino no pueden ser iguales.');
+
+    const url = `/aerosystem/resultados.html?origen=${origen}&destino=${destino}&fecha=${fecha}&pasajeros=${pasajeros}&tipo=${tipoActivo}`;
+    location.href = url;
+}
+
+// ── PANEL AEROPUERTO ──────────────────────────────────────
+async function loadPanel() {
+    try {
+        const r = await fetch('/aerosystem/api/panel.php?action=vuelos24h');
+        const j = await r.json();
+        const vuelos = j.data || [];
+        const tbody  = document.getElementById('boardBody');
+
+        if (vuelos.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" class="panel-empty">
+                No hay vuelos programados en las próximas 24 horas.
+            </td></tr>`;
+            return;
+        }
+
+        tbody.innerHTML = vuelos.map(v => {
+            // Limpiar el estado para usar como clase CSS (quitar espacios)
+            const estadoClase = 'estado-' + v.estado.replace(/\s+/g, '-');
+            return `
+            <tr>
+                <td><strong style="font-family:'Rajdhani',sans-serif;font-size:16px">${v.numero_vuelo}</strong></td>
+                <td>${v.ciudad_origen || v.cod_origen}</td>
+                <td>${v.ciudad_destino || v.cod_destino}</td>
+                <td style="font-family:'Rajdhani',sans-serif;font-size:18px">${v.hora_salida}</td>
+                <td><span class="estado-badge ${estadoClase}">${v.estado}</span></td>
+                <td>${v.puerta || '—'}</td>
+            </tr>`;
+        }).join('');
+    } catch (e) {
+        document.getElementById('boardBody').innerHTML = `
+            <tr><td colspan="6" class="panel-empty">No se pudo cargar el panel.</td></tr>`;
+    }
+}
+</script>
+
+</body>
+</html>

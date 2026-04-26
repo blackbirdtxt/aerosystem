@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang='es'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width,initial-scale=1'>
+    <title>Login AeroSystem</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;700&family=Inter:wght@300;500;600&display=swap" rel="stylesheet">
+    <link rel='stylesheet' href='/css/main.css'>
+    <link rel='stylesheet' href='/css/components.css'>
+    <style>
+        body { background: #0a0e1a; color: #fff; font-family: Inter; display: grid; place-items: center; min-height: 100vh; }
+        .panel { width: 100%; max-width: 950px; background: #111827; border-radius: 30px; display: grid; grid-template-columns: 1fr 1fr; overflow: hidden; }
+        .left { padding: 70px; background: linear-gradient(135deg, #2563eb, #111827); }
+        .right { padding: 60px; }
+        input, select { width: 100%; margin: 10px 0; padding: 15px; background: #0d1526; border: 1px solid #334155; color: white; border-radius: 12px; }
+        button { width: 100%; padding: 15px; background: #2563eb; color: #fff; border: 0; border-radius: 12px; cursor: pointer; }
+        .tabs span { margin-right: 20px; cursor: pointer; font-weight: 700; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+    <div class='panel'>
+        <div class='left'>
+            <h1 style='font-family:Rajdhani;font-size:60px'>AEROSYSTEM</h1>
+            <p>Accede a tus reservas, check-in y tracking.</p>
+        </div>
+        <div class='right'>
+            <div class='tabs' style="margin-bottom: 30px;">
+                <span onclick='showLogin()'>LOGIN</span>
+                <span onclick='showReg()'>REGISTRO</span>
+            </div>
+
+            <form id='loginForm'>
+                <input id='mail' placeholder='Correo'>
+                <input id='clave' type='password' placeholder='Contraseña'>
+                <button type='submit'>Ingresar</button>
+            </form>
+
+            <form id='regForm' class='hidden'>
+                <input placeholder='Nombre'>
+                <input placeholder='Apellido'>
+                <input placeholder='Correo'>
+                <input placeholder='Documento'>
+                <select>
+                    <option>DNI</option>
+                    <option>Pasaporte</option>
+                </select>
+                <input type='password' placeholder='Contraseña'>
+                <button type='submit'>Crear cuenta</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function showLogin() {
+            loginForm.classList.remove('hidden');
+            regForm.classList.add('hidden');
+        }
+
+        function showReg() {
+            regForm.classList.remove('hidden');
+            loginForm.classList.add('hidden');
+        }
+
+        loginForm.onsubmit = async e => {
+            e.preventDefault();
+            // Lógica de autenticación aquí
+        };
+    </script>
+    <script src='/js/api.js'></script>
+    <script src='/js/auth.js'></script>
+</body>
+</html>

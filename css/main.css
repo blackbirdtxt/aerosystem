@@ -1,0 +1,159 @@
+:root {
+  --bg-dark:      #0a0e1a;
+  --bg-card:      #111827;
+  --bg-surface:   #1a2235;
+  --bg-input:     #0d1526;
+  --accent:       #2563eb;
+  --accent-hover: #3b82f6;
+  --accent-light: rgba(37,99,235,0.15);
+  --gold:         #f59e0b;
+  --gold-light:   rgba(245,158,11,0.15);
+  --success:      #10b981;
+  --danger:       #ef4444;
+  --warning:      #f97316;
+  --info:         #06b6d4;
+  --text:         #f1f5f9;
+  --text-muted:   #94a3b8;
+  --text-dim:     #64748b;
+  --border:       rgba(30,58,95,0.6);
+  --glass:        rgba(17,24,39,0.85);
+  --shadow:       0 8px 32px rgba(0,0,0,0.4);
+  --radius:       12px;
+  --radius-sm:    8px;
+}
+
+/* RESET */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg-dark);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* TYPO */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Rajdhani', sans-serif;
+  letter-spacing: 0.5px;
+}
+
+p {
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* LAYOUT */
+.container {
+  width: 100%;
+  padding: 1rem;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .container { max-width: 720px; }
+}
+
+@media (min-width: 1024px) {
+  .container { max-width: 1100px; }
+}
+
+@media (min-width: 1280px) {
+  .container { max-width: 1280px; }
+}
+
+/* HEADER */
+.header {
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0.8rem 1rem;
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav-logo {
+  font-family: 'Rajdhani';
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.nav-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.nav-links a {
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+.nav-links a:hover {
+  color: var(--text);
+}
+
+/* HERO */
+.hero {
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+.hero-title {
+  font-size: 2rem;
+}
+
+.hero-subtitle {
+  color: var(--text-muted);
+}
+
+/* TABLE */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Rajdhani';
+}
+
+.table th,
+.table td {
+  padding: 0.7rem;
+}
+
+.table thead {
+  background: var(--bg-surface);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.table tbody tr {
+  border-bottom: 1px solid var(--border);
+}
+
+/* STATUS */
+.status-programado { color: #94a3b8; }
+.status-retrasado { color: #f97316; animation: pulse 2s infinite; }
+.status-abordando { color: #f59e0b; animation: pulse 1.5s infinite; }
+.status-en-vuelo { color: #3b82f6; }
+.status-aterrizado { color: #10b981; }
+.status-desembarcando { color: #06b6d4; }
+.status-finalizado { color: #64748b; }
+.status-cancelado { color: #ef4444; }
+
+/* FOOTER */
+.footer {
+  margin-top: 2rem;
+  padding: 1rem;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  color: var(--text-dim);
+}

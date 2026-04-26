@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width,initial-scale=1'>
+    <title>Pago</title>
+    <link href="https://fonts.googleapis.com/css2?
+    family=Rajdhani:wght@400;700&family=Inter:wght@300;500&display=swap"
+    rel='stylesheet'>
+    <link rel='stylesheet' href='/css/main.css'>
+    <link rel='stylesheet' href='/css/components.css'>
+    <style>
+        body { background: #0a0e1a; color: white; font-family: Inter; padding: 50px; }
+        .box { max-width: 800px; margin: auto; background: #111827; padding: 40px; border-radius: 25px; }
+        input, select { width: 100%; padding: 15px; margin: 12px 0; background: #0d1526; color: white; border: 1px solid #334155; border-radius: 12px; }
+        button { width: 100%; padding: 16px; background: #2563eb; border: 0; color: white; border-radius: 12px; cursor: pointer; }
+        #ok { display: none; text-align: center; }
+        .pass { background: #1e293b; padding: 20px; border-radius: 18px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class='box' id='paybox'>
+        <h1>Pago Seguro</h1>
+        <p>Total: $220</p>
+        <select id='doc'>
+            <option>Boleta</option>
+            <option>Factura</option>
+        </select>
+        <input id='num' placeholder='Número comprobante'>
+        <button onclick='pay()'>CONFIRMAR Y PAGAR</button>
+    </div>
+
+    <div class='box' id='ok'>
+        <h1>✈ Reserva Confirmada</h1>
+        <h2>AERO-2026-X92A1</h2>
+        <div class='pass'>Boarding Pass LIM → BOG</div>
+        <br>
+        <a href='mi-cuenta.html' style="color: #2563eb;">Mis Reservas</a>
+    </div>
+
+    <script>
+        async function pay() {
+            await fetch('/aerosystem/api/pagos.php?action=procesar', {
+                method: 'POST'
+            });
+            document.getElementById('paybox').style.display = 'none';
+            document.getElementById('ok').style.display = 'block';
+        }
+    </script>
+    <script src='/js/api.js'></script>
+    <script src='/js/auth.js'></script>
+</body>
+</html>

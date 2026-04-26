@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width,initial-scale=1'>
+    <title>Panel Aeropuerto</title>
+    <link href="https://fonts.googleapis.com/css2?
+    family=Rajdhani:wght@400;700&family=Inter:wght@300;500&display=swap"
+    rel='stylesheet'>
+    <link rel='stylesheet' href='/css/main.css'>
+    <link rel='stylesheet' href='/css/components.css'>
+    <style>
+        body { background: #000; color: #00ff99; font-family: Rajdhani; padding: 20px; }
+        h1 { text-align: center; font-size: 60px; }
+        table { width: 100%; border-collapse: collapse; font-size: 32px; }
+        th, td { padding: 18px; border-bottom: 1px solid #0f3; text-align: left; }
+        #ticker { position: fixed; bottom: 0; left: 0; right: 0; background: #021; padding: 15px; font-size: 28px; }
+        button { position: fixed; top: 20px; right: 20px; padding: 12px 18px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <button onclick='document.documentElement.requestFullscreen()'>Pantalla Completa</button>
+    
+    <h1>SALIDAS Y LLEGADAS</h1>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>Vuelo</th>
+                <th>Origen</th>
+                <th>Destino</th>
+                <th>Hora</th>
+                <th>Estado</th>
+                <th>Puerta</th>
+            </tr>
+        </thead>
+        <tbody id='rows'></tbody>
+    </table>
+
+    <div id='ticker'></div>
+
+    <script>
+        async function load() {
+            let r = await fetch('/aerosystem/api/panel.php?action=vuelos24h');
+            let j = await r.json();
+            let d = j.data || [];
+            
+            rows.innerHTML = d.map(v => `
+                <tr>
+                    <td>${v.numero_vuelo}</td>
+                    <td>${v.ciudad_origen}</td>
+                    <td>${v.ciudad_destino}</td>
+                    <td>${v.hora_salida}</td>
+                    <td>${v.estado}</td>
+                    <td>${v.puerta}</td>
+                </tr>
+            `).join('');
+        }
+
+        function clock() {
+            ticker.innerHTML = 'Hora Aeropuerto ' + new Date().toLocaleTimeString();
+        }
+
+        load();
+        setInterval(load, 20000);
+        setInterval(clock, 1000);
+        clock();
+    </script>
+    <script src='/js/api.js'></script>
+    <script src='/js/auth.js'></script>
+</body>
+</html>

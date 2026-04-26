@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang='es'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width,initial-scale=1'>
+    <title>Resultados</title>
+    <link href="https://fonts.googleapis.com/css2?
+    family=Rajdhani:wght@400;700&family=Inter:wght@300;500&display=swap"
+    rel='stylesheet'>
+    <link rel='stylesheet' href='/css/main.css'>
+    <link rel='stylesheet' href='/css/components.css'>
+    <style>
+        body { margin: 0; background: #0a0e1a; color: #fff; font-family: Inter; }
+        .wrap { display: grid; grid-template-columns: 320px 1fr; gap: 30px; padding: 40px; }
+        .filters, .flight { background: #111827; border-radius: 20px; padding: 25px; }
+        .flight { margin-bottom: 20px; }
+        .price { display: inline-block; background: #1e3a8a; padding: 10px 14px; border-radius: 20px; margin: 8px; }
+        button { background: #2563eb; color: #fff; border: 0; padding: 12px 18px; border-radius: 10px; cursor: pointer; }
+        input, select { width: 100%; margin: 10px 0; padding: 10px; background: #0d1526; border: 1px solid #334155; color: white; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class='wrap'>
+        <aside class='filters'>
+            <h2>Filtros</h2>
+            <input placeholder='Precio min'>
+            <input placeholder='Precio max'>
+            <select>
+                <option>Todas aerolíneas</option>
+            </select>
+        </aside>
+
+        <main>
+            <div id='results'></div>
+        </main>
+    </div>
+
+    <script>
+        const p = new URLSearchParams(location.search);
+
+        async function load() {
+            let url = `/aerosystem/api/vuelos.php?action=buscar&origen=${p.get('origen')}&destino=${p.get('destino')}&fecha=${p.get('fecha')}&pasajeros=${p.get('pasajeros')}`;
+            let r = await fetch(url);
+            let j = await r.json();
+            let d = j.data || [];
+
+            results.innerHTML = d.length ? d.map(v => `
+                <div class='flight'>
+                    <h2>${v.numero_vuelo} ${v.ciudad_origen} → ${v.ciudad_destino}</h2>
+                    <p>${v.fecha_salida} | ${v.duracion_min} min</p>
+                    <span class='price'>Eco $${v.precio_eco}</span>
+                    <span class='price'>Ejec $${v.precio_eje}</span>
+                    <span class='price'>Prim $${v.precio_pri}</span>
+                    <br><br>
+                    <button onclick="sel(${v.idvuelo}, ${v.idtarifa_eco || 1})">Seleccionar</button>
+                </div>`).join('') : '<h2>No encontramos vuelos disponibles</h2>';
+        }
+
+        function sel(v, t) {
+            location = 'reserva.html?idvuelo=' + v + '&idtarifa=' + t;
+        }
+
+        load();
+    </script>
+    <script src='/js/api.js'></script>
+    <script src='/js/auth.js'></script>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!doctype html>
+<html><head>
+<meta charset='UTF-8'>
+<meta name='viewport' content='width=device-width,initial-scale=1'>
+<title>Mi Cuenta</title>
+<link href="https://fonts.googleapis.com/css2?
+family=Rajdhani:wght@400;700&family=Inter:wght@300;500&display=swap"
+rel='stylesheet'>
+<link rel='stylesheet' href='/css/main.css'>
+<link rel='stylesheet' href='/css/components.css'>
+<style>
+body{margin:0;background:#0a0e1a;color:white;font-family:Inter}
+.layout{display:grid;grid-template-columns:280px 1fr;min-height:100vh}
+aside{background:#111827;padding:40px}
+main{padding:40px}
+.card{background:#1a2235;padding:25px;border-radius:20px;margin-bottom:20px}
+.tab{margin-right:15px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class='layout'>
+<aside>
+<h2>AG</h2>
+<h3>Ana García</h3>
+<p>demo@aerosystem.com</p>
+</aside>
+<main>
+<div>
+<span class='tab'>MIS VUELOS</span>
+<span class='tab'>HISTORIAL</span>
+<span class='tab'>EQUIPAJE</span>
+<span class='tab'>PERFIL</span>
+</div>
+<div class='card'>
+<h3>LA2341 Lima → Bogotá</h3>
+<p>Estado: Pagada</p>
+<button>Check-in</button>
+</div>
+<div class='card'>
+<h3>Equipaje</h3>
+<p>Registrado → En vuelo → En cinta</p>
+</div>
+</main>
+</div>
+<script src='/js/api.js'></script><script src='/js/auth.js'></script>
+</body></html>
